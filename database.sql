@@ -15,3 +15,12 @@ CREATE TABLE "item" (
     "image_url" VARCHAR (2083),
     "user_id" INT REFERENCES "user"
 );
+
+INSERT INTO "user" ("username", "password" )
+VALUES ('Admiral Greer', 'tuna'),
+('Captain Borodin', 'shark'),
+('Lieutenant Nguyen', 'fishy'),
+('Lieutenant Ryan', 'tuna');
+
+INSERT INTO "item" ("description", "image_url", "user_id" )
+VALUES ('this is the description', 'www.url.com', 1);

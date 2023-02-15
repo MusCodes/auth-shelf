@@ -1,32 +1,52 @@
-const express = require('express');
-const pool = require('../modules/pool');
+const express = require("express");
+const {
+  rejectUnauthenticated,
+} = require("../modules/authentication-middleware");
+const pool = require("../modules/pool");
 const router = express.Router();
 
 /**
  * Get all of the items on the shelf
  */
-router.get('/', (req, res) => {
-  res.sendStatus(200); // For testing only, can be removed
+router.get("/", rejectUnauthenticated, (req, res) => {
+  const queryText = 'SELECT * FROM "item" ORDER by "id";';
+  pool
+    .query(queryText)
+    .then((results) => {
+      res.send(results.rows);
+    })
+    .catch((err) => {
+      console.log("error in GET items", err);
+      res.sendStatus(500);
+    });
 });
 
 /**
  * Add an item for the logged in user to the shelf
  */
-router.post('/', (req, res) => {
+router.post("/", rejectUnauthenticated, (req, res) => {
+  console.log(req.body);
+  const SQLTEXT = `INSERT into "item" (description,image_url,user_id) VALUES ($1,$2,$3);`;
+  pool.query(SQLTEXT, [req.description, req, image_url, req.user.id]).then(result =>{
+    console.log("THIS IS RESULT", result)
+    res.sendStatus(201)
+  }).catch((error) =>{
+    console.log("error in line 33 post", error);
+  })
   // endpoint functionality
 });
 
 /**
  * Delete an item if it's something the logged in user added
  */
-router.delete('/:id', (req, res) => {
+router.delete("/:id", (req, res) => {
   // endpoint functionality
 });
 
 /**
  * Update an item if it's something the logged in user added
  */
-router.put('/:id', (req, res) => {
+router.put("/:id", (req, res) => {
   // endpoint functionality
 });
 
@@ -34,14 +54,14 @@ router.put('/:id', (req, res) => {
  * Return all users along with the total number of items
  * they have added to the shelf
  */
-router.get('/count', (req, res) => {
+router.get("/count", (req, res) => {
   // endpoint functionality
 });
 
 /**
  * Return a specific item by id
  */
-router.get('/:id', (req, res) => {
+router.get("/:id", (req, res) => {
   // endpoint functionality
 });
 
