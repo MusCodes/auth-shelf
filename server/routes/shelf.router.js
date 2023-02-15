@@ -26,8 +26,8 @@ router.get("/", rejectUnauthenticated, (req, res) => {
  */
 router.post("/", rejectUnauthenticated, (req, res) => {
   console.log(req.body);
-  const SQLTEXT = `INSERT into "item" (description,image_url,user_id) VALUES ($1,$2,$3);`;
-  pool.query(SQLTEXT, [req.description, req, image_url, req.user.id]).then(result =>{
+  const queryText = `INSERT into "item" ("description","image_url", "user_id") VALUES ($1,$2,$3);`;
+  pool.query(queryText, [req.body.description, req.body.image_url, req.user.id]).then(result => {
     console.log("THIS IS RESULT", result)
     res.sendStatus(201)
   }).catch((error) =>{
@@ -40,6 +40,12 @@ router.post("/", rejectUnauthenticated, (req, res) => {
  * Delete an item if it's something the logged in user added
  */
 router.delete("/:id", (req, res) => {
+  const id= req.params.id;
+  const SQLTEXT= `SELECT "user_id" FROM "item" WHERE "id"=$1;`;
+  pool.query(SQLTEXT,[id])
+  .then(result =>{
+    console.log("THIS IS RESULT", result);
+  })
   // endpoint functionality
 });
 
@@ -48,6 +54,9 @@ router.delete("/:id", (req, res) => {
  */
 router.put("/:id", (req, res) => {
   // endpoint functionality
+  const id = req.params.id;
+  const {description, image_url} = req.body;
+  pool.query(`UPDATE item SET decription = $1, image_url = $2 `)
 });
 
 /**

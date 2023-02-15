@@ -1,19 +1,21 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-
-// import {useDispatch} from 'react-redux'
-import { put } from "redux-saga/effects";
+import { useDispatch, useSelector } from "react-redux";
+import AddItem from "../AddItem/AddItem";
 
 function ShelfPage() {
+  const dispatch = useDispatch();
   const items = useSelector((store) => store.shelf);
   console.log("THIS IS ITEMS", items);
-
-  // useEffect(() => {
-
-  // })
+  
+  useEffect(() => {
+    dispatch({
+      type: "ADD_SHELF"
+    })
+  }, []);
 
   return (
     <div className="container">
+      <AddItem />
       <h2>Shelf</h2>
       <p>All of the available items can be seen here.</p>
       {items.map((item, index) => (
@@ -21,6 +23,7 @@ function ShelfPage() {
           <img src={item.image_url} />
           {item.description}
           {item.user_id}
+          <button>Delete</button>
         </li>
       ))}
     </div>
