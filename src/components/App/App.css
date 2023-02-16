@@ -4,9 +4,19 @@ body,
   height: 100%;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(
+    180deg,
+    rgb(132, 184, 236),
+    #1e90ff,
+    rgb(132, 184, 236)
+  );
 }
 
 img {

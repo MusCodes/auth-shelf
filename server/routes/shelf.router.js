@@ -27,25 +27,46 @@ router.get("/", rejectUnauthenticated, (req, res) => {
 router.post("/", rejectUnauthenticated, (req, res) => {
   console.log(req.body);
   const queryText = `INSERT into "item" ("description","image_url", "user_id") VALUES ($1,$2,$3);`;
-  pool.query(queryText, [req.body.description, req.body.image_url, req.user.id]).then(result => {
-    console.log("THIS IS RESULT", result)
-    res.sendStatus(201)
-  }).catch((error) =>{
-    console.log("error in line 33 post", error);
-  })
+  pool
+    .query(queryText, [req.body.description, req.body.image_url, req.user.id])
+    .then((result) => {
+      res.sendStatus(201);
+    })
+    .catch((error) => {
+      console.log("error in line 33 post", error);
+    });
   // endpoint functionality
 });
 
 /**
  * Delete an item if it's something the logged in user added
  */
-router.delete("/:id", (req, res) => {
-  const id= req.params.id;
-  const SQLTEXT= `SELECT "user_id" FROM "item" WHERE "id"=$1;`;
-  pool.query(SQLTEXT,[id])
-  .then(result =>{
-    console.log("THIS IS RESULT", result);
-  })
+router.delete("/:id", rejectUnauthenticated, (req, res) => {
+  const itemId = req.params.id;
+
+  const queryText2 = `SELECT "user_id" FROM "item" WHERE "id"=$1;`;
+
+  pool
+    .query(queryText2, [itemId])
+
+    .then((response) => {
+      const userItem = response.rows[0].user_id;
+
+      if (userItem === req.user.id) {
+        const queryText = `DELETE FROM "item" WHERE "id"=$1 AND "user_id"=$2;`;
+
+        pool
+          .query(queryText, [itemId, req.user.id])
+          .then(() => {
+            res.status(200);
+          })
+          .catch((err) => {
+            console.log("error in DELETE ROUTE", err);
+            res.sendStatus(500);
+          });
+      }
+      // console.log("THIS IS RESULT", result);
+    });
   // endpoint functionality
 });
 
@@ -55,8 +76,8 @@ router.delete("/:id", (req, res) => {
 router.put("/:id", (req, res) => {
   // endpoint functionality
   const id = req.params.id;
-  const {description, image_url} = req.body;
-  pool.query(`UPDATE item SET decription = $1, image_url = $2 `)
+  const queryText = `UPDATE item SET decription = $1, image_url = $2 `;
+  pool.query(queryText, [id]);
 });
 
 /**
