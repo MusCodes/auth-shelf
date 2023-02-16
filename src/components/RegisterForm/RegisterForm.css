@@ -1,0 +1,35 @@
+.formPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #8aaefb;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.formPanel h2 {
+  margin-top: 0;
+}
+
+.formPanel label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.formPanel input {
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.formPanel input[type="submit"] {
+  background-color: #8aaefb;
+  color: white;
+  cursor: pointer;
+}
+
+.formPanel input[type="submit"]:hover {
+  background-color: #8aaefb;
+}
